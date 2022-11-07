@@ -6,6 +6,7 @@ from antlr4 import FileStream, CommonTokenStream
 from DE6Lexer import DE6Lexer
 from DE6Parser import DE6Parser
 from DE6ParserVisitor import DE6ParserVisitor
+from anoncore import Anonymiser
 
 
 # Read in the DICOM EDIT script
@@ -30,3 +31,15 @@ tree = de_parser.script()
 my_visitor = DE6ParserVisitor()
 result = my_visitor.visit(tree)
 pprint.pprint(result)
+
+with xnat.connect('https://xnat.bmia.nl') as connection:
+    scan = connection.projects['sandbox'].subjects["ANONYMIZ"].experiments["ANONYMIZ"].scans["T1"]
+    dicom_data = scan.read_dicom()
+
+anonymiser = Anonymiser(dicom_data)
+for action in result:
+    action = action['children']
+    print(f'Attempting to perform action: {action}')
+    anonymiser.perform_action(action)
+
+print(f"Variable set in Anonymiser: {anonymiser.variables}")

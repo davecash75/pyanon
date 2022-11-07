@@ -5,8 +5,8 @@ if __name__ is not None and "." in __name__:
 else:
     from DE6Parser import DE6Parser
 
-# This class defines a complete generic visitor for a parse tree produced by DE6Parser.
 
+# This class defines a complete generic visitor for a parse tree produced by DE6Parser.
 class DE6ParserVisitor(ParseTreeVisitor):
 
     def __init__(self):
